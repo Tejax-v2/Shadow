@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .main-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .slider-container {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+      }
+      .dir-container {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 2;
+      }
+      img {
+        width: 20%;
+      }
+      .speed {
+        width: 80%;
+      }
+      .dir-1,
+      .dir-2,
+      .dir-3 {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+      }
+      .item {
+        flex-grow: 1;
+        text-align: center;
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 33%;
+      }
+      #right img {
+        transform: rotate(180deg);
+      }
+      #forward img {
+        transform: rotate(90deg);
+      }
+      #backward img {
+        transform: rotate(270deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="slider-container">
+        <input
+          type="range"
+          min="0"
+          max="1023"
+          name="speed"
+          class="speed"
+          id="wpnspeed"
+        />
+      </div>
+      <div class="slider-container">
+        <input
+          type="range"
+          min="0"
+          max="1023"
+          name="speed"
+          class="speed"
+          id="carspeed"
+        />
+      </div>
+      <button onclick="btnChrome_onclick()">Go FullScreen</button>
+      <div class="dir-container">
+        <div class="dir-1">
+          <div class="item"></div>
+          <div class="item" id="left"><img src="arrow.png" alt="" /></div>
+          <div class="item"></div>
+        </div>
+        <div class="dir-2">
+          <div class="item" id="backward"><img src="arrow.png" alt="" /></div>
+          <div class="item"></div>
+          <div class="item" id="forward"><img src="arrow.png" alt="" /></div>
+        </div>
+        <div class="dir-3">
+          <div class="item"></div>
+          <div class="item" id="right"><img src="arrow.png" alt="" /></div>
+          <div class="item"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let direction = "S";
+      let wpnspeed = 0;
+      let carspeed = 0;
+      let wpn = document.getElementById("wpnspeed");
+      let car = document.getElementById("carspeed");
+      let left = document.getElementById("left");
+      let right = document.getElementById("right");
+      let forward = document.getElementById("forward");
+      let backward = document.getElementById("backward");
+      setInterval(function () {
+        console.log(
+          "direction: " +
+            direction +
+            " wpnspeed: " +
+            wpnspeed +
+            " carspeed: " +
+            carspeed
+        );
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            // Request was successful, and the response is available in xhr.responseText
+            console.log(xhr.responseText);
+          } else if (xhr.readyState === 4) {
+            // Request completed, but the status code is not 200 (e.g., 404, 500, etc.)
+            console.log("Request failed with status code: " + xhr.status);
+          }
+        };
+        xhr.open(
+          "GET",
+          `http://192.168.4.1/?direction=${direction}&carspeed=${carspeed}&wpnspeed=${wpnspeed}`,
+          true // true for asynchronous
+        );
+        xhr.send();
+      }, 50);
+      wpn.addEventListener("change", function () {
+        wpnspeed = wpn.value;
+        // console.log(wpnspeed);
+      });
+      car.addEventListener("change", function () {
+        carspeed = car.value;
+        // console.log(carspeed);
+      });
+      forward.addEventListener("mousedown", function () {
+        direction = "F";
+        //console.log(direction);
+      });
+      forward.addEventListener("mouseup", function () {
+        direction = "S";
+        //console.log(direction);
+      });
+      backward.addEventListener("mousedown", function () {
+        direction = "B";
+        //console.log(direction);
+      });
+      backward.addEventListener("mouseup", function () {
+        direction = "S";
+        //console.log(direction);
+      });
+      right.addEventListener("mousedown", function () {
+        direction = "R";
+        //console.log(direction);
+      });
+      right.addEventListener("mouseup", function () {
+        direction = "S";
+        //console.log(direction);
+      });
+      left.addEventListener("mousedown", function () {
+        direction = "L";
+        //console.log(direction);
+      });
+      left.addEventListener("mouseup", function () {
+        direction = "S";
+        //console.log(direction);
+      });
+      // JavaScript
+function btnChrome_onclick() {
+  document.documentElement.webkitRequestFullScreen();
+}
+    </script>
+  </body>
+</html>
